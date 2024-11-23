@@ -1,2 +1,5 @@
 [Database]
 db_mongo_url = "mongodb+srv://shivamjoshi:pyby4jV5uy9klcRX@diet-management-plan.iclvb.mongodb.net/"
+
+[JWT]
+ACCESS_TOKEN_EXPIRE_MINUTES = 3000

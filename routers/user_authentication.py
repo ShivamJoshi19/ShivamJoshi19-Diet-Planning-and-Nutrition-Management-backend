@@ -94,6 +94,7 @@ async def login(request: UserLoginRegisterDto):
             Data={
                 "user_id": data.get("user_id"),
                 "access_token": data.get("access_token"),
+                "user_role": data.get("user_role"),
                 "is_active": data.get("is_active")
             },
             Success=True,
