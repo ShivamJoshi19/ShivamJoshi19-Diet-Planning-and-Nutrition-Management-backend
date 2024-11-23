@@ -24,7 +24,7 @@ app.add_middleware(
 
 app.include_router(user_authentication.router, prefix="/auth",
                    tags=["Authentication"])
-app.include_router(user_profile.router, prefix="/userSetUp",
+app.include_router(user_profile.router, prefix="/user",
                    tags=["UserManagement"])
 
 if __name__ == "__main__":

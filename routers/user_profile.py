@@ -1,7 +1,7 @@
 from fastapi import FastAPI, APIRouter, status
 from services.user_profile import UserProfileService
 from dto.request_dto.user_authentication_request_dto import (
-UserProfileDto)
+    UserProfileDto)
 from dto.response_dto.response_dto import ResponseDto
 from custom_utils import custom_utils
 
@@ -9,14 +9,12 @@ router = APIRouter()
 app = FastAPI()
 
 
-@router.post("/user-profile/", response_model=ResponseDto)
+@router.post("/profile-setup/", response_model=ResponseDto)
 async def UserProfile(request: UserProfileDto):
-    print("178")
     try:
-        print("12")
         data = UserProfileService.profile_user(request.user_id, request.first_name,
-                                         request.last_name, request.age, request.weight,
-                                         request.height, request.gender)
+                                               request.last_name, request.age, request.weight,
+                                               request.height, request.gender)
         response = ResponseDto(
             Data={
                 "user_id": data["user_id"],
@@ -26,7 +24,7 @@ async def UserProfile(request: UserProfileDto):
                 "weight": data["weight"],
                 "height": data["height"],
                 "gender": data["gender"],
-                "is_active": data["is_active"], 
+                "is_active": data["is_active"],
             },
             Success=True,
             Status=status.HTTP_200_OK,

@@ -89,3 +89,73 @@ class UserRepository:
         except Exception as e:
             raise RuntimeError(
                 f"An error occurred while registering or updating the user: {str(e)}")
+
+    @staticmethod
+    def update_user_by_email(collection_name, email: str, update_data: dict):
+        """
+        Updates the user document based on the email.
+
+        Args:
+            email (str): The email of the user to update.
+            update_data (dict): The fields to update in the user document.
+
+        Raises:
+            custom_utils.CustomException: If an error occurs while updating the user.
+        """
+        collection = db[collection_name]
+        result = collection.update_one(
+            {"email": email}, {"$set": update_data})
+        if result.matched_count == 0:
+            raise custom_utils.CustomException(
+                "Failed to update user.", status_code=500)
+
+    @staticmethod
+    def update_user_by_id(user_id: str, update_data: dict, collection_name):
+        """
+        Updates a user's document in the database by user ID.
+
+        Args:
+            user_id (str): The user's ID.
+            update_data (dict): A dictionary of fields to update.
+
+        Raises:
+            Exception: If there is an issue updating the user document.
+        """
+        try:
+            collection = db[collection_name]
+            result = collection.update_one(
+                {"user_id": user_id},  # Match the user by ID
+                {"$set": update_data}  # Set the fields to update
+            )
+            if result.matched_count == 0:
+                raise custom_utils.CustomException(
+                    message=f"User with ID {user_id} not found.",
+                    status_code=404
+                )
+            if result.modified_count == 0:
+                raise custom_utils.CustomException(
+                    message="No changes were made to the user document.",
+                    status_code=400
+                )
+        except Exception as e:
+            raise Exception(f"Failed to update user: {e}") from e
+
+    @staticmethod
+    def update_user_status(user_id: str, access_token: str, collection_name):
+        """
+        Updates the user's access token in the database.
+
+        Args:
+            user_id (str): The user's ID.
+            access_token (str): The new JWT access token.
+
+        Raises:
+            Exception: If there is an issue updating the user's access token.
+        """
+        try:
+            update_data = {"access_token": access_token,
+                           "updated_at": datetime.now(timezone.utc)}
+            UserRepository.update_user_by_id(
+                user_id, update_data, collection_name)
+        except Exception as e:
+            raise Exception(f"Failed to update access token: {e}") from e
