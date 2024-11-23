@@ -37,3 +37,9 @@ class UserProfileRepository:
 
 
     
+    @staticmethod
+    def get_user_by_user_id(collection_name, user_id: str):
+
+        collection = db[collection_name]
+        return collection.find_one({"user_id": user_id})
+    

@@ -36,3 +36,8 @@ class UserProfileDto(BaseModel):
                            description="")
     is_active: str = Field(...,
                            description="")
+    
+
+class UserGetProfileDto(BaseModel):
+        user_id: str = Field(...,)
+    

@@ -36,3 +36,34 @@ class UserProfileService:
         except Exception as e:
             raise e
 
+    @staticmethod
+    def get_user_profile(user_id: str) -> dict:
+
+        try:
+            user_document= UserProfileRepository.get_user_by_user_id(
+                USER_COLLECTION,user_id)
+            user_data = user_document
+            
+            user_id = user_data.get('user_id')
+            first_name = user_data.get('first_name')
+            age = user_data.get('age'),
+            weight = user_data.get('weight'),
+            height = user_data.get('height'),
+            gender = user_data.get('gender'),
+            is_active= user_data.get('is_active')
+            # Return Profile response
+            return {
+                "message": "Data fetch successful",
+                "user_id": user_id,
+                "first_name": first_name,
+                "age": age,
+                "weight": weight,
+                "height": height,
+                "gender": gender,
+                "is_active": is_active
+            }
+        except KeyError as ke:
+            raise custom_utils.CustomException(
+                f"Missing key in user data: {str(ke)}", status_code=500)
+        except Exception as e:
+            raise e
