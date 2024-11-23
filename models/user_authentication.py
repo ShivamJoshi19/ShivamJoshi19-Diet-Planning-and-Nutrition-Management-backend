@@ -26,9 +26,9 @@ class UserProfileModel(BaseModel):
         None, description="First name of the user")
     last_name: Optional[str] = Field(None, description="Last name of the user")
     age: int = Field(...)
-    weight: float = Field(...)
-    height: float = Field(...)
-    gender: float = Field(...)
+    weight: str = Field(...)
+    height: str = Field(...)
+    gender: str = Field(...)
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(

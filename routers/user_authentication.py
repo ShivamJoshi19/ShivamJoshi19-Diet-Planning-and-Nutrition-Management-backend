@@ -1,4 +1,5 @@
 from fastapi import FastAPI, APIRouter, status
+from services.user_profile import UserProfileService
 from services.user_authentication import UserService
 from dto.request_dto.user_authentication_request_dto import (
     UserLoginRegisterDto, VerifyOTPRequest, ResetPasswordRequest,
