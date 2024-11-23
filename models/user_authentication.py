@@ -8,7 +8,8 @@ class UserModel(BaseModel):
     user_role: str = Field(...)
     email: EmailStr = Field(...)
     password: str = Field(...)
-    otp: Optional[str] = Field(
+    access_token: Optional[str] = Field(None)
+    otp: Optional[int] = Field(
         None, description="One-time password for authentication")
     otp_created_at: Optional[datetime] = Field(
         None, description="Timestamp when the OTP was created")
