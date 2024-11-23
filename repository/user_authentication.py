@@ -27,7 +27,7 @@ class UserRepository:
 
     @staticmethod
     def register_or_update_user(collection_name: str, user_id: str, email: str,
-                                otp: str, hashed_password: str):
+                                otp: int, hashed_password: str):
         """
         Registers a new user or updates an inactive user's record.
 
@@ -65,24 +65,23 @@ class UserRepository:
                     "updated_at": datetime.now(timezone.utc),
                     "is_active": False,
                 }
-                result = collection.update_one(
+                collection.update_one(
                     {"user_id": user_id}, {"$set": update_data})
                 return user_id
             else:
-                user_data = {
-                    "user_id": user_id,
-                    "email": email,
-                    "password": hashed_password,
-                    "otp": otp,
-                    "otp_created_at": datetime.now(timezone.utc),
-                    "user_role": "user",
-                    "first_name": None,
-                    "last_name": None,
-                    "created_at": datetime.now(timezone.utc),
-                    "updated_at": datetime.now(timezone.utc),
-                    "is_active": False,
-                }
-                result = collection.insert_one(user_data)
+                now = datetime.now(timezone.utc)
+                user_data = UserModel(
+                    user_id=user_id,
+                    email=email,
+                    password=hashed_password,
+                    otp=otp,
+                    otp_created_at=now,
+                    user_role="user",
+                    created_at=now,
+                    updated_at=now,
+                    is_active=False
+                )
+                collection.insert_one(user_data.dict())
                 return user_id
 
         except custom_utils.CustomException as e:

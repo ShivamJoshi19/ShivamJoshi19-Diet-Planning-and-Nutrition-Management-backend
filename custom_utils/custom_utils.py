@@ -82,7 +82,6 @@ def generate_otp():
         RuntimeError: If the generated OTP is out of the expected range.
     """
     try:
-        print("generate otp")
         otp = random.randint(100000, 999999)
         if otp < 100000 or otp > 999999:
             raise RuntimeError(

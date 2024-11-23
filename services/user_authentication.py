@@ -34,7 +34,6 @@ class UserService:
         try:
             password = UserService.hash_password(password)
             otp = custom_utils.generate_otp()
-            print("otp", otp)
             user_id = str(uuid.uuid4())
             user_id = UserRepository.register_or_update_user(
                 USER_COLLECTION, user_id, email, otp, password)
