@@ -10,5 +10,6 @@ class UserQueryRequestDto(BaseModel):
                             description="Dietary preference (e.g., vegetarian, non-vegetarian)")
     disease: Optional[str] = Field(
         None, description="Any diseases the user is suffering from")
+    diet_plan: str = Field(...)
     query_message: Optional[str] = Field(
         None, description="Custom message from the user for the dietitian")

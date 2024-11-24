@@ -79,29 +79,34 @@ async def login(request: user_authentication_request_dto.UserGetProfileDto):
     return response
 
 
-# @router.post("/send-query/", response_model=ResponseDto)
-# async def reset_password(request: user_query_request_dto.UserQueryRequestDto):
-#     try:
-#         data = UserService.reset_password(
-#             request.email, request.otp, request.new_password)
-#         response = ResponseDto(
-#             Data={"email": data["email"]},
-#             Success=True,
-#             Message=data["message"],
-#             Status=status.HTTP_200_OK,
-#         )
-#     except custom_utils.CustomException as e:
-#         response = ResponseDto(
-#             Data=None,
-#             Success=False,
-#             Message=str(e),
-#             Status=e.status_code
-#         )
-#     except Exception as e:
-#         response = ResponseDto(
-#             Data=None,
-#             Success=False,
-#             Message=str(e),
-#             Status=status.HTTP_500_INTERNAL_SERVER_ERROR
-#         )
-#     return response
+@router.post("/send-query/", response_model=ResponseDto)
+async def send_user_query(request: user_query_request_dto.UserQueryRequestDto):
+    try:
+        data = user_profile.UserProfileService.send_user_query(
+            request.user_id, request.allergic_to_food,
+            request.preference, request.disease, request.diet_plan, request.query_message)
+        response = ResponseDto(
+            Data={
+                "dietitian_email": data["dietitian_email"],
+                "user_email": data["user_email"],
+                "user_id": data["user_id"]
+            },
+            Success=True,
+            Message=data["message"],
+            Status=status.HTTP_200_OK,
+        )
+    except custom_utils.CustomException as e:
+        response = ResponseDto(
+            Data=None,
+            Success=False,
+            Message=str(e),
+            Status=e.status_code
+        )
+    except Exception as e:
+        response = ResponseDto(
+            Data=None,
+            Success=False,
+            Message=str(e),
+            Status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+    return response

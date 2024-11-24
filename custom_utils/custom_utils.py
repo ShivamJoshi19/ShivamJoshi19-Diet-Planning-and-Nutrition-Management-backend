@@ -2,6 +2,9 @@ import os
 import random
 import smtplib
 from email.mime.text import MIMEText
+from jinja2 import Environment, FileSystemLoader
+
+template_env = Environment(loader=FileSystemLoader('templates'))
 
 
 class CustomException(Exception):
@@ -91,3 +94,8 @@ def generate_otp():
         raise RuntimeError(
             f"An error occurred while generating OTP: {str(e)}"
         ) from e
+
+
+def render_template(template_name: str, context: dict) -> str:
+    template = template_env.get_template(template_name)
+    return template.render(context)

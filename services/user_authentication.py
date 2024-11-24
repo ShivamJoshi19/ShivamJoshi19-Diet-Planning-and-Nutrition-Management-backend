@@ -37,7 +37,7 @@ class UserService:
             user_id = str(uuid.uuid4())
             user_id = UserRepository.register_or_update_user(
                 USER_COLLECTION, user_id, email, otp, password)
-            subject = "Nutrionist Verification OTP"
+            subject = "HealthQuest Verification OTP"
             html_content = f"""<html><body><p>Your OTP is: {
                 otp}</p></body></html>"""
             email_response = custom_utils.send_email(
@@ -215,7 +215,7 @@ class UserService:
             }
             UserRepository.update_user_by_id(
                 user_id, update_data, USER_COLLECTION)
-            subject = "Nutrionist Verification OTP"
+            subject = "HealthQuest Verification OTP"
             html_content = f"<html><body><p>Your OTP is: {otp}</p></body></html>"
             email_response = custom_utils.send_email(
                 email, subject, html_content)

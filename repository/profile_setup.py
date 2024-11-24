@@ -43,3 +43,12 @@ class UserProfileRepository:
     def get_user_email_by_id(collection_name, user_id: str):
         collection = db[collection_name]
         return collection.find_one({"user_id": user_id})
+
+    @staticmethod
+    def create_query(collection_name, query):
+        try:
+            collection = db[collection_name]
+            query_data = query.dict()
+            collection.insert_one(query_data)
+        except Exception as e:
+            raise Exception(f"Database operation failed: {str(e)}")
