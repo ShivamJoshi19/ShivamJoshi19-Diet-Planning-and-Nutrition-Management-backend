@@ -93,6 +93,7 @@ async def login(request: UserLoginRegisterDto):
         response = ResponseDto(
             Data={
                 "user_id": data.get("user_id"),
+                "first_name": data.get("first_name"),
                 "access_token": data.get("access_token"),
                 "user_role": data.get("user_role"),
                 "is_profile_set": data.get("is_profile_set"),

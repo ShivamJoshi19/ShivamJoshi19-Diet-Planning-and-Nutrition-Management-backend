@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 
 class UserQueryModel(BaseModel):
     user_id: str = Field(...)
+    first_name: str = Field(...)
     allergic_to_food: Optional[str] = Field(
         None, description="Allergies to specific foods")
     preference: str = Field(...,

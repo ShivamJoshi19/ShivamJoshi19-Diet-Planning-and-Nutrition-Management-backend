@@ -89,7 +89,37 @@ async def send_user_query(request: user_query_request_dto.UserQueryRequestDto):
             Data={
                 "dietitian_email": data["dietitian_email"],
                 "user_email": data["user_email"],
-                "user_id": data["user_id"]
+                "user_id": data["user_id"],
+                "first_name": data["first_name"]
+            },
+            Success=True,
+            Message=data["message"],
+            Status=status.HTTP_200_OK,
+        )
+    except custom_utils.CustomException as e:
+        response = ResponseDto(
+            Data=None,
+            Success=False,
+            Message=str(e),
+            Status=e.status_code
+        )
+    except Exception as e:
+        response = ResponseDto(
+            Data=None,
+            Success=False,
+            Message=str(e),
+            Status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+    return response
+
+
+@router.post("/query-status/{id}", response_model=ResponseDto)
+async def get_query_status(id: str):
+    try:
+        data = user_profile.UserProfileService.get_query_status(id)
+        response = ResponseDto(
+            Data={
+                "query_status": data.get("query_status")
             },
             Success=True,
             Message=data["message"],
