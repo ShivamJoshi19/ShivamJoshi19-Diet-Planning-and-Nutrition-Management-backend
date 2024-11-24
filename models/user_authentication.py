@@ -17,6 +17,7 @@ class UserModel(BaseModel):
         default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc))
+    is_profile_set: bool = Field(default=False)
     is_active: bool = Field(default=False)
 
 
@@ -25,7 +26,7 @@ class UserProfileModel(BaseModel):
     first_name: Optional[str] = Field(
         None, description="First name of the user")
     last_name: Optional[str] = Field(None, description="Last name of the user")
-    age: int = Field(...)
+    age: str = Field(...)
     weight: str = Field(...)
     height: str = Field(...)
     gender: str = Field(...)

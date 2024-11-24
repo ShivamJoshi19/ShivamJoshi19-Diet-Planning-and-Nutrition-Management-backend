@@ -172,6 +172,7 @@ class UserService:
             # Extract user details
             user_id = user_data.get('user_id')
             user_role = user_data.get('user_role')
+            is_profile_set = user_data.get('is_profile_set')
             is_active = user_data.get('is_active')
 
             # Generate a new JWT token
@@ -187,6 +188,7 @@ class UserService:
                 "user_id": user_id,
                 "access_token": access_token,
                 "user_role": user_role,
+                "is_profile_set": is_profile_set,
                 "is_active": is_active
             }
         except KeyError as ke:
