@@ -1,5 +1,4 @@
 from fastapi import FastAPI, APIRouter, status
-from services.user_profile import UserProfileService
 from services.user_authentication import UserService
 from dto.request_dto.user_authentication_request_dto import (
     UserLoginRegisterDto, VerifyOTPRequest, ResetPasswordRequest,
@@ -90,15 +89,17 @@ async def verify_otp(request: VerifyOTPRequest):
 async def login(request: UserLoginRegisterDto):
     try:
         data = UserService.login_user(request.email, request.password)
+        response_data = {
+            "user_id": data.get("user_id"),
+            "access_token": data.get("access_token"),
+            "user_role": data.get("user_role"),
+            "is_profile_set": data.get("is_profile_set"),
+            "is_active": data.get("is_active"),
+        }
+        if data.get("is_profile_set"):
+            response_data["first_name"] = data.get("first_name")
         response = ResponseDto(
-            Data={
-                "user_id": data.get("user_id"),
-                "first_name": data.get("first_name"),
-                "access_token": data.get("access_token"),
-                "user_role": data.get("user_role"),
-                "is_profile_set": data.get("is_profile_set"),
-                "is_active": data.get("is_active")
-            },
+            Data=response_data,
             Success=True,
             Message=data["message"],
             Status=status.HTTP_200_OK,

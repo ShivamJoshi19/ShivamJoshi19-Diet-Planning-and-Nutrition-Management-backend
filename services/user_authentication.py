@@ -179,10 +179,13 @@ class UserService:
             access_token = jwt.create_access_token(data={"id": user_id})
             user_authentication.UserRepository.update_user_status(
                 user_id, access_token, USER_COLLECTION)
-            user_document = profile_setup.UserProfileRepository.get_user_by_user_id(
-                USER_PROFILE_COLLECTION, user_id)
-            user_doc = user_document
-            first_name = user_doc.get('first_name')
+            first_name = None
+            if is_profile_set:
+                user_document = profile_setup.UserProfileRepository.get_user_by_user_id(
+                    USER_PROFILE_COLLECTION, user_id)
+                first_name = user_document.get('first_name')
+                user_doc = user_document
+                first_name = user_doc.get('first_name')
             return {
                 "message": "Login Successful",
                 "user_id": user_id,

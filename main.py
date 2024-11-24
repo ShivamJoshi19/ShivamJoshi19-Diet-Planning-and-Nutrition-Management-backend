@@ -4,7 +4,7 @@ This file is the start file for Fast Api
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import user_authentication, user_profile
+from routers import user_authentication, user_profile, diet_management
 
 
 app = FastAPI(
@@ -26,6 +26,8 @@ app.include_router(user_authentication.router, prefix="/auth",
                    tags=["Authentication"])
 app.include_router(user_profile.router, prefix="/user",
                    tags=["UserManagement"])
+app.include_router(diet_management.router, prefix="/dietitian",
+                   tags=["DietManagement"])
 
 if __name__ == "__main__":
     import uvicorn
