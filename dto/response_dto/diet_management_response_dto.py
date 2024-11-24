@@ -21,3 +21,17 @@ class UserQueryResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
     is_active: bool
+
+
+class DietPlanResponseDto(BaseModel):
+    user_id: str
+    breakfast: str
+    lunch: str
+    dinner: str
+    water_intake: str
+    exercise: str
+    plan_duration: str
+    description: str
+    created_at: datetime
+    updated_at: datetime
+    is_active: bool

@@ -51,3 +51,14 @@ async def get_active_user_queries():
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
         ) from e
     return data
+
+
+@router.get("/diet-plan/{id}", response_model=diet_management_response_dto.DietPlanResponseDto)
+async def get_diet_plan(id: str):
+    try:
+        data = diet_management.DietManager.get_diet_plan(id)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
+        ) from e
+    return data

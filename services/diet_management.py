@@ -113,3 +113,12 @@ class DietManager:
             }
         except Exception as e:
             raise e
+
+    @staticmethod
+    def get_diet_plan(user_id: str):
+        diet_plan = profile_setup.UserProfileRepository.get_user_by_user_id(
+            DIET_COLLECTION, user_id)
+        if not diet_plan:
+            raise custom_utils.CustomException(
+                message="Diet plan not found", status_code=404)
+        return diet_plan
