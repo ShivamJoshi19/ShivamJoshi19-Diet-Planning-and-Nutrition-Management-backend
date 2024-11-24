@@ -79,7 +79,7 @@ async def login(request: user_authentication_request_dto.UserGetProfileDto):
     return response
 
 
-@router.get("/send-query/", response_model=ResponseDto)
+@router.post("/send-query/", response_model=ResponseDto)
 async def send_user_query(request: user_query_request_dto.UserQueryRequestDto):
     try:
         data = user_profile.UserProfileService.send_user_query(
@@ -113,7 +113,7 @@ async def send_user_query(request: user_query_request_dto.UserQueryRequestDto):
     return response
 
 
-@router.post("/query-status/{id}", response_model=ResponseDto)
+@router.get("/query-status/{id}", response_model=ResponseDto)
 async def get_query_status(id: str):
     try:
         data = user_profile.UserProfileService.get_query_status(id)
