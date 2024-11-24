@@ -27,17 +27,14 @@ class UserProfileDto(BaseModel):
                             description="The user's first name")
     last_name: str = Field(...,
                            description="The user's last name")
-    age: int = Field(...,
-                         description="The user's country")
+    age: str = Field(...,
+                     description="The user's age")
     weight: str = Field(..., description="")
     height: str = Field(...,
-                           description="")
+                        description="")
     gender: str = Field(...,
-                           description="")
-    is_active: str = Field(...,
-                           description="")
-    
+                        description="")
+
 
 class UserGetProfileDto(BaseModel):
-        user_id: str = Field(...,)
-    
+    user_id: str = Field(...,)

@@ -63,6 +63,7 @@ class UserRepository:
                     "otp": otp,
                     "otp_created_at": datetime.now(timezone.utc),
                     "updated_at": datetime.now(timezone.utc),
+                    "is_profile_set": False,
                     "is_active": False,
                 }
                 collection.update_one(
@@ -79,6 +80,7 @@ class UserRepository:
                     user_role="user",
                     created_at=now,
                     updated_at=now,
+                    is_profile_set=False,
                     is_active=False
                 )
                 collection.insert_one(user_data.dict())
