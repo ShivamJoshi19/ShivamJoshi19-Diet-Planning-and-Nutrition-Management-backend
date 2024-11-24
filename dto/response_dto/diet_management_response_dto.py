@@ -5,7 +5,13 @@ from datetime import datetime
 
 class UserQueryResponse(BaseModel):
     user_id: str
-    first_name: str
+    first_name: Optional[str] = ""
+    last_name: Optional[str] = ""
+    age: Optional[str] = ""
+    weight: Optional[str] = ""
+    height: Optional[str] = ""
+    gender: Optional[str] = ""
+    bmi: Optional[float] = ""
     allergic_to_food: Optional[str] = ""
     preference: str
     disease: Optional[str] = ""

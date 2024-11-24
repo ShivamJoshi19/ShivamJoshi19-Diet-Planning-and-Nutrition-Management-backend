@@ -12,9 +12,43 @@ class DietManager:
     @staticmethod
     def get_active_user_queries():
         try:
-            response = diet_management.DietManagementRepositoy.get_active_users_query(
+            active_queries = diet_management.DietManagementRepositoy.get_active_users_query(
                 USER_QUERY_COLLECTION)
-            return response
+            enriched_responses = []
+            for query in active_queries:
+                user_id = query.user_id
+                user_profile = profile_setup.UserProfileRepository.get_user_by_user_id(
+                    USER_PROFILE_COLLECTION, user_id)
+                if user_profile:
+                    query.first_name = user_profile.get(
+                        "first_name", query.first_name)
+                    query.last_name = user_profile.get(
+                        "last_name", "")
+                    query.age = user_profile.get("age", "")
+                    query.height = user_profile.get("height", "")
+                    query.weight = user_profile.get("weight", "")
+                    query.gender = user_profile.get("gender", "")
+                    try:
+                        height = query.height
+                        weight = query.weight
+                        if height and weight:
+                            # Convert height (cm -> meters)
+                            height_in_meters = float(height) / 100.0
+                            # Convert weight to float (kg)
+                            weight_in_kg = float(weight)
+                            bmi = round(weight_in_kg /
+                                        (height_in_meters ** 2), 2)
+                            query.bmi = bmi
+                        else:
+                            query.bmi = None
+                    except (ValueError, TypeError):
+                        raise custom_utils.CustomException(
+                            message="Invalid height or weight for BMI calculation",
+                            status_code=400
+                        )
+
+                enriched_responses.append(query)
+            return enriched_responses
         except Exception as e:
             raise e
 
@@ -76,59 +110,6 @@ class DietManager:
                 "email": email_response['email'],
                 "user_id": user_id,
                 "message": "Diet Plan created successfully"
-            }
-        except Exception as e:
-            raise e
-
-    @staticmethod
-    def get_user_data(user_id: str):
-        try:
-            user_doc = profile_setup.UserProfileRepository.get_user_email_by_id(
-                USER_PROFILE_COLLECTION, user_id)
-            if not user_doc:
-                raise custom_utils.CustomException(
-                    message="User profile not found",
-                    status_code=404
-                )
-            active_query = diet_management.DietManagementRepositoy.get_active_user_query(
-                user_id, USER_QUERY_COLLECTION)
-            if not active_query:
-                raise custom_utils.CustomException(
-                    message="No active query found for the user",
-                    status_code=404
-                )
-            allergic_to_food = active_query.get('allergic_to_food')
-            preference = active_query.get('preference')
-            disease = active_query.get('disease')
-            query_message = active_query.get('query_message')
-            first_name = user_doc.get('first_name')
-            last_name = user_doc.get('last_name')
-            age = user_doc.get('age')
-            weight = user_doc.get('weight')
-            height = user_doc.get('height')
-            gender = user_doc.get('gender')
-            try:
-                # Convert height (cm -> meters)
-                height_in_meters = float(height) / 100.0
-                weight_in_kg = float(weight)  # Convert weight to float (kg)
-                bmi = round(weight_in_kg / (height_in_meters ** 2), 2)
-            except (ValueError, TypeError):
-                raise custom_utils.CustomException(
-                    message="Invalid height or weight for BMI calculation",
-                    status_code=400
-                )
-            return {
-                "first_name": first_name,
-                "last_name": last_name,
-                "age": age,
-                "height": height,
-                "weight": weight,
-                "gender": gender,
-                "bmi": bmi,
-                "allergic_to_food": allergic_to_food,
-                "preference": preference,
-                "disease": disease,
-                "query_message": query_message,
             }
         except Exception as e:
             raise e

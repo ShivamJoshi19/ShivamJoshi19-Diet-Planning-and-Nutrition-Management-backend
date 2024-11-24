@@ -51,30 +51,3 @@ async def get_active_user_queries():
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
         ) from e
     return data
-
-
-@router.get("/user-data/{id}", response_model=response_dto.ResponseDto)
-async def get_user_data(id: str):
-    try:
-        data = diet_management.DietManager.get_user_data(id)
-        response = response_dto.ResponseDto(
-            Data=data,
-            Success=True,
-            Message="Data retrieved successfully",
-            Status=status.HTTP_200_OK,
-        )
-    except custom_utils.CustomException as e:
-        response = response_dto.ResponseDto(
-            Data=None,
-            Success=False,
-            Message=str(e),
-            Status=e.status_code
-        )
-    except Exception as e:
-        response = response_dto.ResponseDto(
-            Data=None,
-            Success=False,
-            Message=str(e),
-            Status=status.HTTP_500_INTERNAL_SERVER_ERROR
-        )
-    return response
