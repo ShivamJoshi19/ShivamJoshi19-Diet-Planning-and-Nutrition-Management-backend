@@ -79,7 +79,7 @@ async def login(request: user_authentication_request_dto.UserGetProfileDto):
     return response
 
 
-@router.post("/send-query/", response_model=ResponseDto)
+@router.get("/send-query/", response_model=ResponseDto)
 async def send_user_query(request: user_query_request_dto.UserQueryRequestDto):
     try:
         data = user_profile.UserProfileService.send_user_query(
