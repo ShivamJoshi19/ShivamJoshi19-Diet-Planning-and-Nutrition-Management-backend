@@ -5,21 +5,19 @@ from datetime import datetime, timezone
 
 class UserQueryModel(BaseModel):
     user_id: str = Field(...)
-    dietitian_id: Optional[str] = Field(
-        None, description="The ID of the assigned dietitian"
-    )
     allergic_to_food: Optional[str] = Field(
         None, description="Allergies to specific foods")
     preference: str = Field(...,
                             description="Dietary preference (e.g., vegetarian, non-vegetarian)")
     disease: Optional[str] = Field(
         None, description="Any diseases the user is suffering from")
-    diet_plan: Optional[str] = Field(None, description="Diet plan suggestions")
+    diet_plan: str = Field(...,
+                           description="Diet plan suggestions (e.g., lose weight, gain weight)")
     query_message: Optional[str] = Field(
         None, description="Custom message from the user for the dietitian"
     )
     status: str = Field(
-        default="new", description="Status of the query (e.g., new, in_progress, resolved)"
+        default="pending", description="Status of the query (e.g., pending, resolved)"
     )
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc))

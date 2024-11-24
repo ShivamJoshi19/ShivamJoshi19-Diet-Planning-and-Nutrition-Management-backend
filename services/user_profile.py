@@ -1,10 +1,13 @@
 from datetime import datetime, timezone
+import os
+from models.user_query import UserQueryModel
 from repository.profile_setup import UserProfileRepository
 from repository.user_authentication import UserRepository
 from custom_utils import custom_utils
 
 USER_PROFILE_COLLECTION = "UserProfile"
 USER_COLLECTION = "User"
+USER_QUERY_COLLECTION = "UserQuery"
 
 
 class UserProfileService:
@@ -88,5 +91,49 @@ class UserProfileService:
         except KeyError as ke:
             raise custom_utils.CustomException(
                 f"Missing key in user data: {str(ke)}", status_code=500)
+        except Exception as e:
+            raise e
+
+    @staticmethod
+    def send_user_query(user_id, allergic_to_food, preference,
+                        disease, diet_plan, query_message):
+        try:
+            user_document = UserProfileRepository.get_user_by_user_id(
+                USER_PROFILE_COLLECTION, user_id)
+            if not user_document:
+                raise custom_utils.CustomException(
+                    message="User not found", status_code=404)
+            user_data = user_document
+            user_doc = UserProfileRepository.get_user_email_by_id(
+                USER_COLLECTION, user_id)
+            user_email = user_doc.get('email')
+            first_name = user_data.get('first_name')
+            last_name = user_data.get('last_name')
+            full_name = f"{first_name} {last_name}"
+            query = UserQueryModel(
+                user_id=user_id,
+                allergic_to_food=allergic_to_food,
+                preference=preference,
+                disease=disease,
+                diet_plan=diet_plan,
+                query_message=query_message,
+                status="pending",
+                created_at=datetime.now(timezone.utc),
+                updated_at=datetime.now(timezone.utc),
+                is_active=True
+            )
+            UserProfileRepository.create_query(USER_QUERY_COLLECTION, query)
+            subject = "HealthQuest Query Submission"
+            html_content_for_user_query = custom_utils.render_template("user_query_submission.html", {
+                "full_name": full_name
+            })
+            email_response = custom_utils.send_email(
+                user_email, subject, html_content_for_user_query)
+            return {
+                "dietitian_email": os.getenv("DIETITIAN_EMIAL"),
+                "user_email": email_response['email'],
+                "user_id": user_id,
+                "message": "Query submitted successfully!"
+            }
         except Exception as e:
             raise e
