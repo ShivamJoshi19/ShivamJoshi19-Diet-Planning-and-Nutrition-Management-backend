@@ -112,6 +112,7 @@ class UserProfileService:
             full_name = f"{first_name} {last_name}"
             query = UserQueryModel(
                 user_id=user_id,
+                first_name=first_name,
                 allergic_to_food=allergic_to_food,
                 preference=preference,
                 disease=disease,
@@ -133,7 +134,21 @@ class UserProfileService:
                 "dietitian_email": os.getenv("DIETITIAN_EMIAL"),
                 "user_email": email_response['email'],
                 "user_id": user_id,
+                "first_name": first_name,
                 "message": "Query submitted successfully!"
+            }
+        except Exception as e:
+            raise e
+
+    @staticmethod
+    def get_query_status(user_id: str):
+        try:
+            user_query = UserProfileRepository.get_user_by_user_id(USER_QUERY_COLLECTION,
+                                                                   user_id)
+            query_status = user_query.get('status')
+            return {
+                "query_status": query_status,
+                "message": "User Query Status Retrieved Successfully"
             }
         except Exception as e:
             raise e
