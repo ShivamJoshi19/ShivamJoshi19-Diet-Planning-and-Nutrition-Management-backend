@@ -12,12 +12,13 @@ app = FastAPI()
 @router.post("/create-plan/", response_model=response_dto.ResponseDto)
 async def create_user_plan(request: diet_management_request_dto.DietPlanRequest):
     try:
-        data = user_profile.DietManager.create_user_plan(request.user_id, request.breakfast,
-                                                         request.lunch, request.dinner, request.water_intake,
-                                                         request.exercise, request.plan_duration,
-                                                         request.description)
+        data = diet_management.DietManager.create_user_plan(request.user_id, request.breakfast,
+                                                            request.lunch, request.dinner, request.water_intake,
+                                                            request.exercise, request.plan_duration,
+                                                            request.description)
         response = response_dto.ResponseDto(
             Data={
+                "email": data.get("email"),
                 "user_id": data.get("user_id")
             },
             Success=True,

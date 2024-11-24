@@ -1,0 +1,63 @@
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border: 1px solid #dddddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            padding: 20px;
+            color: #333333;
+            line-height: 1.6;
+        }
+        .content p {
+            margin: 10px 0;
+        }
+        .footer {
+            background-color: #f1f1f1;
+            color: #777777;
+            text-align: center;
+            padding: 10px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1> Your Diet Plan is Ready! </h1>
+        </div>
+        <div class="content">
+            <p> Dear {{full_name}}, </p>
+            <p> We’re excited to let you know that your personalized diet plan has been prepared by our dietitian! </p>
+            <p> Please review the plan and follow it to achieve your health and wellness goals. If you have any questions or need adjustments, feel free to reach out. </p>
+            <p> Wishing you great success on your journey to better health! </p>
+        </div>
+        <div class="footer">
+            <p>© 2024 HealthQuest. All rights reserved.</p>
+            <p>This is an automated message. Please do not reply directly to this email.</p>
+        </div>
+    </div>
+</body>
+</html>
