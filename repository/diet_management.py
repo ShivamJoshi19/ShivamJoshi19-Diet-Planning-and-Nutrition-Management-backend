@@ -101,3 +101,28 @@ class DietManagementRepositoy:
         return collection.find_one(
             {"user_id": user_id, "is_active": True}
         )
+
+    def submit_diet_progress(user_id: str, breakfast: str,
+                             lunch: str, dinner: str, water_intake: str,
+                             exercise: str, collection_name):
+        try:
+            collection = db[collection_name]
+            now = datetime.now(timezone.utc)
+            user_plan = DietPlanModel(
+                user_id=user_id,
+                breakfast=breakfast,
+                lunch=lunch,
+                dinner=dinner,
+                water_intake=water_intake,
+                exercise=exercise,
+                created_at=now,
+                updated_at=now,
+                is_active=True
+            )
+            collection.insert_one(user_plan.dict())
+            return user_id
+        except custom_utils.CustomException as e:
+            raise e
+        except Exception as e:
+            raise RuntimeError(
+                f"An error occurred while submitting diet progress: {str(e)}")

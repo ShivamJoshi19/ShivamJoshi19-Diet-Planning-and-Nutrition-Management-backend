@@ -6,6 +6,7 @@ DIET_COLLECTION = "DietPlan"
 USER_QUERY_COLLECTION = "UserQuery"
 USER_PROFILE_COLLECTION = "UserProfile"
 USER_COLLECTION = "User"
+DIET_TRACKING_COLLECTION = "DietTracking"
 
 
 class DietManager:
@@ -122,3 +123,24 @@ class DietManager:
             raise custom_utils.CustomException(
                 message="Diet plan not found", status_code=404)
         return diet_plan
+
+    @staticmethod
+    def submit_diet_progress(user_id: str, breakfast: str,
+                             lunch: str, dinner: str, water_intake: str,
+                             exercise: str):
+        try:
+            user_document = profile_setup.UserProfileRepository.get_user_by_user_id(
+                USER_PROFILE_COLLECTION, user_id)
+            if not user_document:
+                raise custom_utils.CustomException(
+                    message="User not found", status_code=404)
+
+            diet_management.DietManagementRepositoy.submit_diet_progress(
+                user_id, breakfast, lunch, dinner, water_intake,
+                exercise, DIET_TRACKING_COLLECTION)
+            return {
+                "user_id": user_id,
+                "message": "Diet progress submitted successfully"
+            }
+        except Exception as e:
+            raise e
