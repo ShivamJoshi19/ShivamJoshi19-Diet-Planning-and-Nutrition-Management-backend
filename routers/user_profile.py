@@ -151,7 +151,8 @@ async def submit_diet_progress(request: diet_management_request_dto.DietTrackReq
                                                                 request.exercise)
         response = response_dto.ResponseDto(
             Data={
-                "user_id": data.get("user_id")
+                "user_id": data.get("user_id"),
+                "created_at": data.get("created_at")
             },
             Success=True,
             Message=data["message"],

@@ -142,18 +142,20 @@ class DietManager:
                     message="Diet plan not found for the user", status_code=404)
             plan_duration = int(diet_plan["plan_duration"])
             diet_progress_entries = diet_management.DietManagementRepositoy.get_user_diet_progress(
-                DIET_TRACKING_COLLECTION, user_id
+                DIET_TRACKING_COLLECTION, user_id, raise_exception=False
             )
-            total_entries = len(diet_progress_entries)
+            total_entries = len(
+                diet_progress_entries) if diet_progress_entries else 0
             if total_entries >= plan_duration:
                 raise custom_utils.CustomException(
-                    status_code=400, message="Diet plan expired. Can not submit progress"
+                    status_code=400, message="Diet plan expired. Cannot submit progress"
                 )
-            diet_management.DietManagementRepositoy.submit_diet_progress(
+            result = diet_management.DietManagementRepositoy.submit_diet_progress(
                 user_id, breakfast, lunch, dinner, water_intake,
                 exercise, DIET_TRACKING_COLLECTION)
             return {
-                "user_id": user_id,
+                "user_id": result["user_id"],
+                "created_at": result["created_at"],
                 "message": "Diet progress submitted successfully"
             }
         except Exception as e:
@@ -188,8 +190,7 @@ class DietManager:
                 message="Diet plan not found for the user", status_code=404)
         plan_duration = int(diet_plan["plan_duration"])
         diet_progress_entries = diet_management.DietManagementRepositoy.get_user_diet_progress(
-            DIET_TRACKING_COLLECTION, user_id
-        )
+            DIET_TRACKING_COLLECTION, user_id, raise_exception=True)
         total_entries = len(diet_progress_entries)
         if total_entries > plan_duration:
             raise custom_utils.CustomException(

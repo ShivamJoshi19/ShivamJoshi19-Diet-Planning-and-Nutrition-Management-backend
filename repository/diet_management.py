@@ -120,7 +120,7 @@ class DietManagementRepositoy:
                 is_active=True
             )
             collection.insert_one(user_plan_progress.dict())
-            return user_id
+            return {"user_id": user_id, "created_at": now}
         except custom_utils.CustomException as e:
             raise e
         except Exception as e:
@@ -128,11 +128,11 @@ class DietManagementRepositoy:
                 f"An error occurred while submitting diet progress: {str(e)}")
 
     @staticmethod
-    def get_user_diet_progress(collection_name, user_id: str):
+    def get_user_diet_progress(collection_name, user_id: str, raise_exception: bool = True):
         collection = db[collection_name]
         diet_progress = list(
             collection.find({"user_id": user_id}))
-        if not diet_progress:
+        if not diet_progress and raise_exception:
             raise custom_utils.CustomException(
                 status_code=404, message="No user progress found")
         return diet_progress
