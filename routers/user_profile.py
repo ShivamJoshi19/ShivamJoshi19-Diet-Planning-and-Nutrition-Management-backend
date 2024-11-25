@@ -172,3 +172,35 @@ async def submit_diet_progress(request: diet_management_request_dto.DietTrackReq
             Status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
     return response
+
+
+@router.get("/diet-progress/{id}", response_model=response_dto.ResponseDto)
+async def get_user_diet_progress(id: str):
+    try:
+        data = diet_management.DietManager.get_user_diet_progress(id)
+        response = response_dto.ResponseDto(
+            Data={
+                "user_id": data.get("user_id"),
+                "plan_duration": data.get("plan_duration"),
+                "diet_followed_for_days": data.get("diet_followed_for_days"),
+                "progress": data.get("progress")
+            },
+            Success=True,
+            Message="Diet Progress Fetched Successfully!",
+            Status=status.HTTP_200_OK,
+        )
+    except custom_utils.CustomException as e:
+        response = response_dto.ResponseDto(
+            Data=None,
+            Success=False,
+            Message=str(e),
+            Status=e.status_code
+        )
+    except Exception as e:
+        response = response_dto.ResponseDto(
+            Data=None,
+            Success=False,
+            Message=str(e),
+            Status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+    return response

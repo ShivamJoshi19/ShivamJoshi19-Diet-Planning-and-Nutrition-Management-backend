@@ -126,3 +126,13 @@ class DietManagementRepositoy:
         except Exception as e:
             raise RuntimeError(
                 f"An error occurred while submitting diet progress: {str(e)}")
+
+    @staticmethod
+    def get_user_diet_progress(collection_name, user_id: str):
+        collection = db[collection_name]
+        diet_progress = list(
+            collection.find({"user_id": user_id}))
+        if not diet_progress:
+            raise custom_utils.CustomException(
+                status_code=404, message="No user progress found")
+        return diet_progress

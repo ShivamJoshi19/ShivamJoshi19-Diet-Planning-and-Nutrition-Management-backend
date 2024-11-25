@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from typing import List
 from repository import diet_management, profile_setup
 from custom_utils import custom_utils
 
@@ -134,7 +135,20 @@ class DietManager:
             if not user_document:
                 raise custom_utils.CustomException(
                     message="User not found", status_code=404)
-
+            diet_plan = profile_setup.UserProfileRepository.get_user_by_user_id(
+                DIET_COLLECTION, user_id)
+            if not diet_plan:
+                raise custom_utils.CustomException(
+                    message="Diet plan not found for the user", status_code=404)
+            plan_duration = int(diet_plan["plan_duration"])
+            diet_progress_entries = diet_management.DietManagementRepositoy.get_user_diet_progress(
+                DIET_TRACKING_COLLECTION, user_id
+            )
+            total_entries = len(diet_progress_entries)
+            if total_entries >= plan_duration:
+                raise custom_utils.CustomException(
+                    status_code=400, message="Diet plan expired. Can not submit progress"
+                )
             diet_management.DietManagementRepositoy.submit_diet_progress(
                 user_id, breakfast, lunch, dinner, water_intake,
                 exercise, DIET_TRACKING_COLLECTION)
@@ -144,3 +158,48 @@ class DietManager:
             }
         except Exception as e:
             raise e
+
+    @staticmethod
+    def calculate_progress(entries: List[dict], duration: int) -> dict:
+        total_days = duration * 100  # total percentage possible for each field
+        progress = {"breakfast": 0, "lunch": 0, "dinner": 0,
+                    "water_intake": 0, "exercise": 0}
+
+        for entry in entries:
+            for key in progress.keys():
+                if entry[key].lower() == "yes":
+                    progress[key] += 100  # Add percentage for "yes"
+
+        for key in progress.keys():
+            progress[key] = (progress[key] / total_days) * \
+                100  # Calculate field percentage
+
+        overall_progress = sum(progress.values()) / \
+            len(progress)  # Average of all fields
+        progress["overall_progress"] = overall_progress
+        return progress
+
+    @staticmethod
+    def get_user_diet_progress(user_id: str):
+        diet_plan = profile_setup.UserProfileRepository.get_user_by_user_id(
+            DIET_COLLECTION, user_id)
+        if not diet_plan:
+            raise custom_utils.CustomException(
+                message="Diet plan not found for the user", status_code=404)
+        plan_duration = int(diet_plan["plan_duration"])
+        diet_progress_entries = diet_management.DietManagementRepositoy.get_user_diet_progress(
+            DIET_TRACKING_COLLECTION, user_id
+        )
+        total_entries = len(diet_progress_entries)
+        if total_entries > plan_duration:
+            raise custom_utils.CustomException(
+                status_code=400, message="Diet plan expired. No further progress can be tracked."
+            )
+        progress = DietManager.calculate_progress(
+            diet_progress_entries, plan_duration)
+        return {
+            "user_id": user_id,
+            "plan_duration": plan_duration,
+            "diet_followed_for_days": total_entries,
+            "progress": progress
+        }
