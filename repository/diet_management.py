@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 from connections.mongo_connection import MongoConnection
 from custom_utils import custom_utils
 from dto.response_dto.diet_management_response_dto import UserQueryResponse
-from models.diet_management import DietPlanModel
+from models.diet_management import DietPlanModel, DietTrackingModel
 
 db = MongoConnection.get_db()
 
@@ -108,7 +108,7 @@ class DietManagementRepositoy:
         try:
             collection = db[collection_name]
             now = datetime.now(timezone.utc)
-            user_plan = DietPlanModel(
+            user_plan_progress = DietTrackingModel(
                 user_id=user_id,
                 breakfast=breakfast,
                 lunch=lunch,
@@ -119,7 +119,7 @@ class DietManagementRepositoy:
                 updated_at=now,
                 is_active=True
             )
-            collection.insert_one(user_plan.dict())
+            collection.insert_one(user_plan_progress.dict())
             return user_id
         except custom_utils.CustomException as e:
             raise e

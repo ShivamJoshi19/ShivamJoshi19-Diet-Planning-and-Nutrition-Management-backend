@@ -18,7 +18,7 @@ class DietPlanModel(BaseModel):
     is_active: bool = Field(default=False)
 
 
-class DietPlanModel(BaseModel):
+class DietTrackingModel(BaseModel):
     user_id: str = Field(...)
     breakfast: str = Field(...)
     lunch: str = Field(...)
