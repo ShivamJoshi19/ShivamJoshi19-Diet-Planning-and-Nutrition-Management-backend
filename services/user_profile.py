@@ -58,6 +58,9 @@ class UserProfileService:
         try:
             user_document = UserProfileRepository.get_user_by_user_id(
                 USER_PROFILE_COLLECTION, user_id)
+            if not user_document:
+                raise custom_utils.CustomException(
+                    "Profile not exists for the user.", status_code=409)
             user_data = user_document
 
             user_id = user_data.get('user_id')
